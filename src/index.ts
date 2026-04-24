@@ -1,4 +1,4 @@
-export interface Env {
+interface WorkerEnv {
   DOMAIN: string
   DKIM_PRIVATE_KEY: string
   API_KEY: string
@@ -18,7 +18,7 @@ async function fetchAndRetry(url: RequestInfo | URL, options?: RequestInit, retr
 }
 
 export default {
-  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+  async fetch(request: Request, env: WorkerEnv, ctx: ExecutionContext): Promise<Response> {
     if (request.method !== "POST") return new Response("Method Not Allowed", { status: 405 })
 
     const apiKey = request.headers.get("Authorization")?.split(" ")[1]

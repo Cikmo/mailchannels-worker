@@ -3,12 +3,13 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "cf-typegen": "wrangler types",
     "deploy": "wrangler deploy",
     "dev": "wrangler dev",
-    "start": "wrangler dev"
+    "start": "wrangler dev",
+    "typecheck": "npm run cf-typegen && tsc --noEmit"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20260424.1",
     "typescript": "^6.0.3",
     "wrangler": "^4.85.0"
   }

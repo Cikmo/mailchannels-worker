@@ -82,21 +82,29 @@ First, clone the repository:
 
 Ensure you have [Node.js](https://nodejs.org/en) installed and run `npm install`.
 
+After dependency or Wrangler configuration changes, regenerate the Worker runtime types and re-run type checking:
+
+```bash
+$ npm run typecheck
+```
+
 By default, the worker is named "mailchannels". This is a unique name per account that Cloudflare uses to identify each worker. The worker depends on three environment variables, so it only works for one domain per worker. If you want to deploy two workers in the same Cloudflare account, you must rename one of the workers before deploying it to avoid collisions. If you want to rename it, you can do it in the "wrangler.toml" file.
 
 To deploy, run `npm run deploy`. This prompts you to log in with your Cloudflare account and deploy the worker.
 
 #### Setting Environment Variables
 
-1. Log in into the Cloudflare dashboard > Workers & Pages > your deployed worker > Settings > Environment Variables > Add variables.
-2. Add the "DKIM_PRIVATE_KEY" environment variable generated in the previous step from the contents of the `private_key.txt` file.
-3. Add the "API_KEY" environment variable. Generate one, for example using:
+1. Add the "DOMAIN" environment variable in Cloudflare dashboard > Workers & Pages > your deployed worker > Settings > Variables and Secrets > Add variable.
+2. Add the "DKIM_PRIVATE_KEY" secret generated in the previous step from the contents of the `private_key.txt` file.
+3. Add the "API_KEY" secret. Generate one, for example using:
 
     ```bash
     $ openssl rand -hex 64
     ```
 
-4. Add the "DOMAIN" environment variable, which is yor email sending domain.
+4. Set "DOMAIN" to your email sending domain.
+
+For local development, put these values in a `.dev.vars` file. The project ignores `.dev.vars*` so environment-specific files such as `.dev.vars.production` stay untracked.
 
 ## Usage
 
