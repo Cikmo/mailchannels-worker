@@ -4,6 +4,19 @@ export interface Env {
   API_KEY: string
 }
 
+async function delay(ms: number = 1000): Promise<void> {
+  return new Promise<void>((resolve) => setTimeout(resolve, ms))
+}
+
+async function fetchAndRetry(url: RequestInfo | URL, options?: RequestInit, retries: number = 5): Promise<Response> {
+  const response = await fetch(url, options)
+  if (response.ok || retries === 0) return response
+
+  await delay()
+
+  return fetchAndRetry(url, options, retries - 1)
+}
+
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     if (request.method !== "POST") return new Response("Method Not Allowed", { status: 405 })
@@ -21,7 +34,7 @@ export default {
       }
     })
 
-    return await fetch("https://api.mailchannels.net/tx/v1/send", {
+    return await fetchAndRetry("https://api.mailchannels.net/tx/v1/send", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(email)
